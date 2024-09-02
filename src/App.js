@@ -1,10 +1,15 @@
 import { useState } from "react";
 
-let nextId = 0;
+let nextList = [
+  { id: 0, name: "세탁기 작동시키기" },
+  { id: 1, name: "배추 구매하기" },
+];
+
+let nextId = 2;
 
 export default function List() {
-  const [name, setName] = useState("");
-  const [list, setList] = useState([]);
+  const [name, setName] = useState();
+  const [list, setList] = useState(nextList, []);
   return (
     <>
       <h1>To Do List</h1>
