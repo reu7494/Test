@@ -6,9 +6,11 @@
   "homepage": "https://reu7494.github.io/Test/",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "react-scripts start",
+    "build": "react-scripts build",
+    "eject": "react-scripts eject",
     "predeploy": "npm run build",
-    "deploy": "gh-pages -d build",
-    "build": "webpack"
+    "deploy": "gh-pages -d build"
   },
   "keywords": [],
   "author": "",
