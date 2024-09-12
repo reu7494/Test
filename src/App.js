@@ -1,4 +1,8 @@
+//https://inherent-danit-orientaluniversity-6510c6dd.koyeb.app/
+
 import { useState, useEffect } from "react";
+import Insertion from "./Insertion.js";
+import Eliminate from "./Eliminate.js";
 
 // React 컴포넌트
 export default function List() {
@@ -34,31 +38,13 @@ export default function List() {
   return (
     <>
       <h1>To Do List</h1>
-      <input
-        value={name}
-        onChange={(e) => setName(e.target.value)}
-        onKeyDown={(e) => {
-          if (e.key === "Enter") {
-            handleAdd();
-          }
-        }}
-      />
+      <Insertion name={name} setName={setName} handleAdd={handleAdd} />
       <button onClick={handleAdd}>Add</button>
       <ul>
         {lists.map((list) => (
           <li key={list.id}>
             {list.name}
-            <button
-              onClick={() => {
-                fetch(`http://localhost:8008/todos/${list.id}`, {
-                  method: "DELETE",
-                }).then(() => {
-                  setLists(lists.filter((item) => item.id !== list.id));
-                });
-              }}
-            >
-              Delete
-            </button>
+            <Eliminate list={list} lists={lists} setLists={setLists} />
           </li>
         ))}
       </ul>
