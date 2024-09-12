@@ -3,7 +3,6 @@
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
-  "homepage": "https://reu7494.github.io/Test/",
   "scripts": {
     "test": "react-scripts test",
     "start": "react-scripts start",
