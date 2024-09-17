@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react";
 import Insertion from "./Insertion.js";
 import Eliminate from "./Eliminate.js";
+import OpenWindowOnLoad from "./Openwindow.js";
 
 // React 컴포넌트
 export default function List() {
@@ -36,18 +37,21 @@ export default function List() {
   }
 
   return (
-    <>
+    <div className="scroll-container">
+      <OpenWindowOnLoad />
       <h1>To Do List</h1>
       <Insertion name={name} setName={setName} handleAdd={handleAdd} />
       <button onClick={handleAdd}>Add</button>
-      <ul>
-        {lists.map((list) => (
-          <li key={list.id}>
-            {list.name}
-            <Eliminate list={list} lists={lists} setLists={setLists} />
-          </li>
-        ))}
-      </ul>
-    </>
+      <div className="scroll-stick">
+        <ul>
+          {lists.map((list) => (
+            <li key={list.id}>
+              {list.name}
+              <Eliminate list={list} lists={lists} setLists={setLists} />
+            </li>
+          ))}
+        </ul>
+      </div>
+    </div>
   );
 }
