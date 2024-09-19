@@ -61,7 +61,7 @@ ul {
 
 .scroll-stick {
   height: 100%;
-  overflow-y: scroll; /* 세로 스크롤바 활성화 */
-  padding: 10px;
+  overflow-y: scroll;
+  padding: 5px;
   box-sizing: border-box;
 }
