@@ -1,15 +1,17 @@
 import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
-function SignUp() {
+export default function SignUp() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [error, setError] = useState(null);
+  const navigate = useNavigate();
 
   const handleSignUp = async (e) => {
     e.preventDefault();
     if (password !== confirmPassword) {
-      setError("Passwords do not match");
+      setError("비밀번호가 일치하지 않습니다.");
       return;
     }
 
@@ -21,46 +23,45 @@ function SignUp() {
       });
 
       if (!response.ok) {
-        setError("Sign up failed");
+        alert("회원가입 오류");
         return;
       }
 
-      alert("Sign up successful! Please login.");
+      alert("회원가입 성공!");
+      navigate("/Login");
     } catch (error) {
-      setError("An error occurred. Please try again.");
+      setError("다시 시도하세요");
     }
   };
 
   return (
     <div>
-      <h2>Sign Up</h2>
+      <h2>회원가입</h2>
       <form onSubmit={handleSignUp}>
-        <label>Email:</label>
+        <label>이메일:</label>
         <input
           type="email"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
           required
         />
-        <label>Password:</label>
+        <label>비밀번호:</label>
         <input
           type="password"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
           required
         />
-        <label>Confirm Password:</label>
+        <label>비밀번호 재입력:</label>
         <input
           type="password"
           value={confirmPassword}
           onChange={(e) => setConfirmPassword(e.target.value)}
           required
         />
-        {error && <p style={{ color: "red" }}>{error}</p>}
-        <button type="submit">Sign Up</button>
+        {error}
+        <button type="submit">회원가입</button>
       </form>
     </div>
   );
 }
-
-export default SignUp;

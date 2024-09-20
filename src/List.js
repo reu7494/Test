@@ -1,4 +1,5 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
+import { BrowserRouter } from "react-router-dom";
 import Insertion from "./Insertion.js";
 import Eliminate from "./Eliminate.js";
 
@@ -7,7 +8,7 @@ export default function List({ user, setUser }) {
   const [lists, setLists] = useState([]);
   const [error, setError] = useState(null);
 
-  const fetchTodos = async () => {
+  const fetchTodos = useCallback(async () => {
     try {
       const response = await fetch(
         `http://localhost:8008/todos?userId=${user.id}`
@@ -20,11 +21,11 @@ export default function List({ user, setUser }) {
       console.error("Error fetching todos:", error);
       setError("Failed to load tasks.");
     }
-  };
+  }, [user]); // user가 변경될 때만 fetchTodos가 재정의됨
 
   useEffect(() => {
     if (user) fetchTodos();
-  }, [user]);
+  }, [user, fetchTodos]); // fetchTodos가 의존성 배열에 포함됨
 
   const handleAdd = async () => {
     if (!name.trim()) return;
@@ -70,22 +71,24 @@ export default function List({ user, setUser }) {
   };
 
   return (
-    <div>
-      <h1>{user.email}'s To Do List</h1>
-      <Insertion name={name} setName={setName} handleAdd={handleAdd} />
-      <button onClick={handleAdd}>Add</button>
-      {error && <p style={{ color: "red" }}>{error}</p>}
-      <ul>
-        {lists.map((list) => (
-          <li key={list.id}>
-            {list.name}
-            <Eliminate list={list} lists={lists} setLists={setLists} />
-          </li>
-        ))}
-      </ul>
-      <button onClick={handleDeleteAccount} style={{ color: "red" }}>
-        Delete Account
-      </button>
-    </div>
+    <BrowserRouter>
+      <div>
+        <h1>{user.email}'s To Do List</h1>
+        <Insertion name={name} setName={setName} handleAdd={handleAdd} />
+        <button onClick={handleAdd}>Add</button>
+        {error && <p style={{ color: "red" }}>{error}</p>}
+        <ul>
+          {lists.map((list) => (
+            <li key={list.id}>
+              {list.name}
+              <Eliminate list={list} lists={lists} setLists={setLists} />
+            </li>
+          ))}
+        </ul>
+        <button onClick={handleDeleteAccount} style={{ color: "red" }}>
+          Delete Account
+        </button>
+      </div>
+    </BrowserRouter>
   );
 }
