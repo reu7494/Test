@@ -36,7 +36,7 @@ export default function SignUp() {
 
   return (
     <div>
-      <h2>회원가입</h2>
+      <h2>계정추가</h2>
       <form onSubmit={handleSignUp}>
         <label>이메일:</label>
         <input

@@ -25,7 +25,7 @@ export default function List({ user, setUser }) {
 
   useEffect(() => {
     if (user) fetchTodos();
-  }, [user, fetchTodos]); // fetchTodos가 의존성 배열에 포함됨
+  }, [user, fetchTodos]);
 
   const handleAdd = async () => {
     if (!name.trim()) return;
@@ -49,8 +49,7 @@ export default function List({ user, setUser }) {
 
   // 회원탈퇴 요청
   const handleDeleteAccount = async () => {
-    if (!window.confirm("Are you sure you want to delete your account?"))
-      return;
+    if (!window.confirm("탈퇴를 진행하시겠습니까?")) return;
 
     try {
       const response = await fetch(
@@ -85,9 +84,7 @@ export default function List({ user, setUser }) {
             </li>
           ))}
         </ul>
-        <button onClick={handleDeleteAccount} style={{ color: "red" }}>
-          Delete Account
-        </button>
+        <button onClick={handleDeleteAccount}>회원탈퇴</button>
       </div>
     </BrowserRouter>
   );

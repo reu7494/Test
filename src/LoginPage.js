@@ -5,7 +5,6 @@ export default function LoginPage({ setUser }) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState(null);
-  const navigate = useNavigate();
 
   const handleLogin = async (e) => {
     e.preventDefault();
@@ -27,9 +26,10 @@ export default function LoginPage({ setUser }) {
       alert("로그인 정보가 일치하지 않습니다. 다시 시도하세요.");
     }
   };
-  const OpenSign = () => {
+  const navigate = useNavigate();
+  function OpenSign() {
     navigate("/SignUp");
-  };
+  }
 
   return (
     <div>

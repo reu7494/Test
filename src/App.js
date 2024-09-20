@@ -13,7 +13,7 @@ export default function App() {
     <div>
       {!user ? (
         <Routes>
-          <Route path="/Login" element={<LoginPage setUser={setUser} />} />
+          <Route path="/" element={<LoginPage setUser={setUser} />} />
           <Route path="/SignUp" element={<SignUp />} />
         </Routes>
       ) : (
