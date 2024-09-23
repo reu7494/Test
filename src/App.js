@@ -2,9 +2,9 @@
 
 import { Route, Routes } from "react-router-dom";
 import React, { useState } from "react";
-import LoginPage from "./LoginPage";
-import SignUp from "./SignUp";
-import List from "./List";
+import LoginPage from "./LoginPage.js";
+import SignUp from "./SignUp.js";
+import List from "./List.js";
 
 export default function App() {
   const [user, setUser] = useState(null); // 로그인된 사용자 상태 관리
@@ -13,11 +13,17 @@ export default function App() {
     <div>
       {!user ? (
         <Routes>
-          <Route path="/" element={<LoginPage setUser={setUser} />} />
+          <Route path="/" element={<LoginPage />} />
+          <Route path="/Login" element={<LoginPage setUser={setUser} />} />
           <Route path="/SignUp" element={<SignUp />} />
         </Routes>
       ) : (
-        <List user={user} setUser={setUser} /> // 로그인된 사용자에게 할 일 목록 표시
+        <Routes>
+          <Route
+            pate="/List"
+            element={<List user={user} setUser={setUser} />}
+          />
+        </Routes>
       )}
     </div>
   );

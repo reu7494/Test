@@ -11,14 +11,14 @@ export default function SignUp() {
   const handleSignUp = async (e) => {
     e.preventDefault();
     if (password !== confirmPassword) {
-      setError("비밀번호가 일치하지 않습니다.");
+      alert("비밀번호가 일치하지 않습니다.");
       return;
     }
 
     try {
-      const response = await fetch("http://localhost:8008/api/signup", {
+      const response = await fetch("http://localhost:8008/signup", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: { "Content-Type": "application/json;charset=utf-8" },
         body: JSON.stringify({ email, password }),
       });
 
@@ -33,6 +33,10 @@ export default function SignUp() {
       setError("다시 시도하세요");
     }
   };
+
+  function openLogin() {
+    navigate("/Login");
+  }
 
   return (
     <div>
@@ -61,6 +65,9 @@ export default function SignUp() {
         />
         {error}
         <button type="submit">회원가입</button>
+        <button type="button" onClick={openLogin}>
+          로그인
+        </button>
       </form>
     </div>
   );

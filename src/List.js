@@ -1,5 +1,4 @@
 import { useState, useEffect, useCallback } from "react";
-import { BrowserRouter } from "react-router-dom";
 import Insertion from "./Insertion.js";
 import Eliminate from "./Eliminate.js";
 
@@ -70,22 +69,20 @@ export default function List({ user, setUser }) {
   };
 
   return (
-    <BrowserRouter>
-      <div>
-        <h1>{user.email}'s To Do List</h1>
-        <Insertion name={name} setName={setName} handleAdd={handleAdd} />
-        <button onClick={handleAdd}>Add</button>
-        {error && <p style={{ color: "red" }}>{error}</p>}
-        <ul>
-          {lists.map((list) => (
-            <li key={list.id}>
-              {list.name}
-              <Eliminate list={list} lists={lists} setLists={setLists} />
-            </li>
-          ))}
-        </ul>
-        <button onClick={handleDeleteAccount}>회원탈퇴</button>
-      </div>
-    </BrowserRouter>
+    <div>
+      <h1>{user.email}'s To Do List</h1>
+      <Insertion name={name} setName={setName} handleAdd={handleAdd} />
+      <button onClick={handleAdd}>Add</button>
+      {error && <p style={{ color: "red" }}>{error}</p>}
+      <ul>
+        {lists.map((list) => (
+          <li key={list.id}>
+            {list.name}
+            <Eliminate list={list} lists={lists} setLists={setLists} />
+          </li>
+        ))}
+      </ul>
+      <button onClick={handleDeleteAccount}>회원탈퇴</button>
+    </div>
   );
 }

@@ -5,11 +5,12 @@ export default function LoginPage({ setUser }) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState(null);
+  const navigate = useNavigate();
 
   const handleLogin = async (e) => {
     e.preventDefault();
     try {
-      const response = await fetch("http://localhost:8008/login", {
+      const response = await fetch("http://localhost:8008/Login", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email, password }),
@@ -22,11 +23,11 @@ export default function LoginPage({ setUser }) {
       }
 
       setUser(data.user); // 로그인 성공 시 사용자 정보 저장
+      navigate("/List");
     } catch (error) {
       alert("로그인 정보가 일치하지 않습니다. 다시 시도하세요.");
     }
   };
-  const navigate = useNavigate();
   function OpenSign() {
     navigate("/SignUp");
   }
@@ -52,7 +53,9 @@ export default function LoginPage({ setUser }) {
         <div>
           {error}
           <button type="submit">로그인</button>
-          <button onClick={OpenSign}>회원가입</button>
+          <button type="button" onClick={OpenSign}>
+            회원가입
+          </button>
         </div>
       </form>
     </div>
