@@ -25,7 +25,7 @@ db.connect((err) => {
 });
 
 // 회원가입 API
-app.post("/signup", (req, res) => {
+app.post("/Signup", (req, res) => {
   const { email, password } = req.body;
 
   if (!email || !password) {
@@ -44,7 +44,7 @@ app.post("/signup", (req, res) => {
     }
 
     const insertQuery = "INSERT INTO users (email, password) VALUES (?, ?)";
-    db.query(insertQuery, [email, password], (err, result) => {
+    db.query(insertQuery, [email, password], (err, _result) => {
       if (err) {
         console.error("Error registering user:", err);
         return res.status(500).send("Server error");
@@ -55,7 +55,7 @@ app.post("/signup", (req, res) => {
 });
 
 // 로그인 API
-app.post("/login", (req, res) => {
+app.post("/Login", (req, res) => {
   const { email, password } = req.body;
 
   if (!email || !password) {
@@ -165,5 +165,5 @@ app.delete("/delete-user/:id", (req, res) => {
 
 // 서버 실행
 app.listen(PORT, () => {
-  console.log(`Server is running at http://localhost:${PORT}`);
+  console.log(`Server is running at http://localhost:8008/`);
 });

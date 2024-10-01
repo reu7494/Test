@@ -1,26 +1,30 @@
 import { useState, useEffect, useCallback } from "react";
+import LogoutPage from "./LogoutPage.js";
 import Insertion from "./Insertion.js";
 import Eliminate from "./Eliminate.js";
+import { useNavigate } from "react-router-dom";
 
 export default function List({ user, setUser }) {
   const [name, setName] = useState("");
   const [lists, setLists] = useState([]);
   const [error, setError] = useState(null);
 
+  const navigate = useNavigate();
+
   const fetchTodos = useCallback(async () => {
     try {
       const response = await fetch(
         `http://localhost:8008/todos?userId=${user.id}`
       );
-      if (!response.ok) throw new Error("Failed to fetch todos");
+      if (!response.ok) throw new Error("Failed to fetch Todos");
 
       const data = await response.json();
       setLists(data);
     } catch (error) {
-      console.error("Error fetching todos:", error);
+      console.error("Error fetching Todos:", error);
       setError("Failed to load tasks.");
     }
-  }, [user]); // user가 변경될 때만 fetchTodos가 재정의됨
+  }, [user]);
 
   useEffect(() => {
     if (user) fetchTodos();
@@ -60,8 +64,9 @@ export default function List({ user, setUser }) {
 
       if (!response.ok) throw new Error("Failed to delete account");
 
-      alert("Account deleted successfully.");
+      alert("회원탈퇴 성공");
       setUser(null); // 사용자 로그아웃 처리
+      navigate("/Login");
     } catch (error) {
       console.error("Error deleting account:", error);
       setError("Failed to delete account.");
@@ -70,18 +75,21 @@ export default function List({ user, setUser }) {
 
   return (
     <div>
-      <h1>{user.email}'s To Do List</h1>
+      <h1>{user.userName}'s To Do List</h1>
       <Insertion name={name} setName={setName} handleAdd={handleAdd} />
       <button onClick={handleAdd}>Add</button>
       {error && <p style={{ color: "red" }}>{error}</p>}
-      <ul>
-        {lists.map((list) => (
-          <li key={list.id}>
-            {list.name}
-            <Eliminate list={list} lists={lists} setLists={setLists} />
-          </li>
-        ))}
-      </ul>
+      <div className="scroll">
+        <ul>
+          {lists.map((list) => (
+            <li key={list.id}>
+              {list.name}
+              <Eliminate list={list} lists={lists} setLists={setLists} />
+            </li>
+          ))}
+        </ul>
+      </div>
+      <LogoutPage />
       <button onClick={handleDeleteAccount}>회원탈퇴</button>
     </div>
   );

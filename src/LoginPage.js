@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 export default function LoginPage({ setUser }) {
   const [email, setEmail] = useState("");
@@ -19,18 +19,16 @@ export default function LoginPage({ setUser }) {
       const data = await response.json();
       if (!response.ok) {
         setError(data.message || "로그인 실패");
-        return;
+      } else {
+        localStorage.setItem("token", data.token);
+        localStorage.setItem("email", data.email);
+        setUser(data.user);
+        navigate(`/todos?userId=${data.user.id}`);
       }
-
-      setUser(data.user); // 로그인 성공 시 사용자 정보 저장
-      navigate("/List");
     } catch (error) {
       alert("로그인 정보가 일치하지 않습니다. 다시 시도하세요.");
     }
   };
-  function OpenSign() {
-    navigate("/SignUp");
-  }
 
   return (
     <div>
@@ -53,9 +51,7 @@ export default function LoginPage({ setUser }) {
         <div>
           {error}
           <button type="submit">로그인</button>
-          <button type="button" onClick={OpenSign}>
-            회원가입
-          </button>
+          <Link to={"/SignUp"}>회원가입</Link>
         </div>
       </form>
     </div>

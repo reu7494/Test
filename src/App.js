@@ -20,7 +20,7 @@ export default function App() {
       ) : (
         <Routes>
           <Route
-            pate="/List"
+            path="/todos"
             element={<List user={user} setUser={setUser} />}
           />
         </Routes>
