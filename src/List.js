@@ -74,7 +74,7 @@ export default function List({ user, setUser }) {
   };
 
   return (
-    <div>
+    <div className="todo-container">
       <h1>{user.userName}'s To Do List</h1>
       <Insertion name={name} setName={setName} handleAdd={handleAdd} />
       <button onClick={handleAdd}>Add</button>
@@ -89,7 +89,7 @@ export default function List({ user, setUser }) {
           ))}
         </ul>
       </div>
-      <LogoutPage />
+      <LogoutPage setUser={setUser} />
       <button onClick={handleDeleteAccount}>회원탈퇴</button>
     </div>
   );

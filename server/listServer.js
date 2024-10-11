@@ -2,6 +2,9 @@ const express = require("express");
 const mysql = require("mysql2");
 const cors = require("cors");
 const PORT = process.env.PORT || 8008;
+const path = require("path");
+const jwt = require("jsonwebtoken");
+const SECRET_KEY = "your_secret_key";
 
 const app = express();
 app.use(cors());
@@ -24,30 +27,56 @@ db.connect((err) => {
   console.log("Connected to the MySQL database");
 });
 
-// 회원가입 API
-app.post("/Signup", (req, res) => {
-  const { email, password } = req.body;
+// 유저명 중복 확인 API
+app.post("/check-username", (req, res) => {
+  const { userName } = req.body;
 
-  if (!email || !password) {
-    return res.status(400).send("Email and password are required.");
+  if (!userName) {
+    return res.status(400).send("유저명이 필요합니다.");
   }
 
-  const checkQuery = "SELECT * FROM users WHERE email = ?";
-  db.query(checkQuery, [email], (err, result) => {
+  const checkQuery = "SELECT * FROM users WHERE userName = ?";
+  db.query(checkQuery, [userName], (err, result) => {
     if (err) {
       console.error("Error checking user existence:", err);
-      return res.status(500).send("Server error");
+      return res.status(500).send("서버 오류");
     }
 
     if (result.length > 0) {
-      return res.status(400).send("Email already exists.");
+      return res.json({ exists: true }); // 유저명 중복
+    } else {
+      return res.json({ exists: false }); // 유저명 사용 가능
+    }
+  });
+});
+
+// 회원가입 API
+app.post("/Signup", (req, res) => {
+  const { email, password, userName } = req.body;
+
+  if (!email || !password || !userName) {
+    return res.status(400).send("Email, password 및 유저명이 필요합니다.");
+  }
+
+  // 이메일 또는 유저명 중복 확인
+  const checkQuery = "SELECT * FROM users WHERE email = ? OR userName = ?";
+  db.query(checkQuery, [email, userName], (err, result) => {
+    if (err) {
+      console.error("Error checking user existence:", err);
+      return res.status(500).send("서버 오류");
     }
 
-    const insertQuery = "INSERT INTO users (email, password) VALUES (?, ?)";
-    db.query(insertQuery, [email, password], (err, _result) => {
+    if (result.length > 0) {
+      return res.status(400).send("이미 존재하는 이메일 또는 유저명입니다.");
+    }
+
+    // 유저 등록
+    const insertQuery =
+      "INSERT INTO users (email, password, userName) VALUES (?, ?, ?)";
+    db.query(insertQuery, [email, password, userName], (err, _result) => {
       if (err) {
         console.error("Error registering user:", err);
-        return res.status(500).send("Server error");
+        return res.status(500).send("서버 오류");
       }
       res.status(201).send("User registered successfully.");
     });
@@ -66,7 +95,7 @@ app.post("/Login", (req, res) => {
   db.query(query, [email, password], (err, result) => {
     if (err) {
       console.error("Error logging in:", err);
-      return res.status(500).send("Server error");
+      return res.status(500).send("서버 오류");
     }
 
     if (result.length === 0) {
@@ -74,7 +103,16 @@ app.post("/Login", (req, res) => {
     }
 
     const user = result[0];
-    res.json({ user: { id: user.id, email: user.email } });
+
+    // JWT 토큰 발급
+    const token = jwt.sign({ id: user.id, email: user.email }, SECRET_KEY, {
+      expiresIn: "1h",
+    });
+
+    res.json({
+      user: { id: user.id, email: user.email, userName: user.userName },
+      token, // 클라이언트로 토큰 전달
+    });
   });
 });
 
@@ -90,7 +128,7 @@ app.get("/todos", (req, res) => {
   db.query(query, [userId], (err, result) => {
     if (err) {
       console.error("Error fetching todos:", err);
-      return res.status(500).send("Server error");
+      return res.status(500).send("서버 오류");
     }
 
     res.json(result);
@@ -109,7 +147,7 @@ app.post("/todos", (req, res) => {
   db.query(query, [name, userId], (err, result) => {
     if (err) {
       console.error("Error adding todo:", err);
-      return res.status(500).send("Server error");
+      return res.status(500).send("서버 오류");
     }
 
     res.status(201).json({ id: result.insertId, name });
@@ -128,7 +166,7 @@ app.delete("/todos/:id", (req, res) => {
   db.query(query, [id], (err, result) => {
     if (err) {
       console.error("Error deleting todo:", err);
-      return res.status(500).send("Server error");
+      return res.status(500).send("서버 오류");
     }
 
     if (result.affectedRows === 0) {
@@ -152,7 +190,7 @@ app.delete("/delete-user/:id", (req, res) => {
   db.query(query, [id], (err, result) => {
     if (err) {
       console.error("Error deleting user:", err);
-      return res.status(500).send("Server error");
+      return res.status(500).send("서버 오류");
     }
 
     if (result.affectedRows === 0) {
@@ -161,6 +199,11 @@ app.delete("/delete-user/:id", (req, res) => {
 
     res.send("User and related todos deleted successfully.");
   });
+});
+
+app.use(express.static(path.join(__dirname, "TODOLIST/build")));
+app.get("*", function (req, res) {
+  res.sendFile(path.join(__dirname, "/TODOLIST/build/index.html"));
 });
 
 // 서버 실행

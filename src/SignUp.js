@@ -7,48 +7,81 @@ export default function SignUp() {
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [error, setError] = useState(null);
+  const [formErrors, setFormErrors] = useState({
+    userName: "",
+    email: "",
+    password: "",
+  });
 
   const navigate = useNavigate();
-  const nameRegEx = /^[가-힣a-zA-Z0-9]{3,12}$/;
+  const nameRegEx = /^[a-zA-Z0-9]{3,12}$/;
   const emailRegEx =
     /^[A-Za-z0-9]([-_.]?[A-Za-z0-9])*@[A-Za-z0-9]([-_.]?[A-Za-z0-9])*\.[A-Za-z]{2,3}$/;
   const passwordRegEx =
     /^(?=.*[A-Za-z])(?=.*\d)(?=.*[!@#$%^&*])[A-Za-z\d!@#$%^&*]{8,20}$/;
 
-  const nameCheck = (userName) => {
-    if (nameRegEx.test(userName) === false) {
-      setError("유저명 형식을 확인하세요");
-    }
-  };
-  const emailCheck = (email) => {
-    if (emailRegEx.test(email) === false) {
-      setError("이메일 형식을 확인하세요");
-      return;
-    }
-  };
+  const checkUserNameDuplicate = async (userName) => {
+    const response = await fetch("http://localhost:8008/check-username", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ userName }),
+    });
 
-  const passwordCheck = (password) => {
-    if (password.match(passwordRegEx) === null) {
-      setError("비밀번호 형식을 확인해주세요");
-      return;
-    }
+    const data = await response.json();
+    return data.exists;
   };
 
   const handleSignUp = async (e) => {
     e.preventDefault();
+    setError(null);
+
+    let validationErrors = {};
+
+    // 유저명 형식 체크
+    if (!nameRegEx.test(userName)) {
+      validationErrors.userName = "유저명 형식을 확인하세요.";
+    }
+
+    // 이메일 형식 체크
+    if (!emailRegEx.test(email)) {
+      validationErrors.email = "이메일 형식을 확인하세요.";
+    }
+
+    // 비밀번호 형식 체크
+    if (!passwordRegEx.test(password)) {
+      validationErrors.password = "비밀번호 형식을 확인하세요.";
+    }
+
+    // 비밀번호 확인 체크
     if (password !== confirmPassword) {
       setError("비밀번호가 일치하지 않습니다.");
+      return;
+    }
+
+    // 오류가 있을 경우 화면에 표시
+    if (Object.keys(validationErrors).length > 0) {
+      setFormErrors(validationErrors);
+      return;
+    }
+
+    // 유저명 중복 체크
+    const isUserNameDuplicate = await checkUserNameDuplicate(userName);
+    if (isUserNameDuplicate) {
+      setError("이미 사용 중인 유저명입니다.");
       return;
     }
 
     try {
       const response = await fetch("http://localhost:8008/Signup", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: {
+          "Content-Type": "application/json",
+          Accept: "application/json",
+        },
         body: JSON.stringify({
           email: email,
           password: password,
-          name: userName,
+          userName: userName,
         }),
       });
 
@@ -59,59 +92,82 @@ export default function SignUp() {
         navigate("/Login");
       }
     } catch (error) {
-      setError("오류");
+      setError("오류 발생");
     }
   };
 
   return (
-    <div>
+    <div className="container">
       <h2>회원가입</h2>
       <form onSubmit={handleSignUp}>
-        <label>유저명: </label>
-        <input
-          type="text"
-          value={userName}
-          onChange={(e) => {
-            setUserName(e.target.value);
-            nameCheck(e.target.value);
-          }}
-          required
-        />
-        <p>
-          유저명은 한글, 영어(대소문자), 숫자만 허용하며 3자 이상 12자 이하로
-          입력하세요
-        </p>
-        <label>이메일: </label>
-        <input
-          type="email"
-          value={email}
-          onChange={(e) => {
-            setEmail(e.target.value);
-            emailCheck(e.target.value);
-          }}
-          required
-        />
-        <label>비밀번호: </label>
-        <input
-          type="password"
-          value={password}
-          onChange={(e) => {
-            setPassword(e.target.value);
-            passwordCheck(e.target.value);
-          }}
-          required
-        />
-        <label>비밀번호 재입력: </label>
-        <input
-          type="password"
-          value={confirmPassword}
-          onChange={(e) => setConfirmPassword(e.target.value)}
-          required
-        />
+        <div className="form-field">
+          <label>유저명: </label>
+          <input
+            type="text"
+            value={userName}
+            onChange={(e) => {
+              setUserName(e.target.value);
+              setFormErrors((prev) => ({ ...prev, userName: "" }));
+            }}
+            required
+          />
+          <p>
+            유저명은 영어(대소문자), 숫자만 허용하며 3자 이상 12자 이하로
+            입력하세요
+          </p>
+          {formErrors.userName && (
+            <p style={{ color: "red" }}>{formErrors.userName}</p>
+          )}
+        </div>
+
+        <div className="form-field">
+          <label>이메일: </label>
+          <input
+            type="email"
+            value={email}
+            onChange={(e) => {
+              setEmail(e.target.value);
+              setFormErrors((prev) => ({ ...prev, email: "" }));
+            }}
+            required
+          />
+          {formErrors.email && (
+            <p style={{ color: "red" }}>{formErrors.email}</p>
+          )}
+        </div>
+
+        <div className="form-field">
+          <label>비밀번호: </label>
+          <input
+            type="password"
+            value={password}
+            onChange={(e) => {
+              setPassword(e.target.value);
+              setFormErrors((prev) => ({ ...prev, password: "" }));
+            }}
+            required
+          />
+
+          <label>비밀번호 재입력: </label>
+          <input
+            type="password"
+            value={confirmPassword}
+            onChange={(e) => setConfirmPassword(e.target.value)}
+            required
+          />
+        </div>
+
         <p>영문 대소문자, 숫자, 특수문자를 혼합하여 8~20자로 입력하세요</p>
+
+        {formErrors.password && (
+          <p style={{ color: "red" }}>{formErrors.password}</p>
+        )}
         {error && <p style={{ color: "red" }}>{error}</p>}
+
         <button type="submit">회원가입</button>
-        <Link to={"/Login"}>로그인</Link>
+        <Link to={"/Login"} className="link-button">
+          로그인
+        </Link>
       </form>
     </div>
   );

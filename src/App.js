@@ -1,5 +1,3 @@
-//https://inherent-danit-orientaluniversity-6510c6dd.koyeb.app/
-
 import { Route, Routes } from "react-router-dom";
 import React, { useState } from "react";
 import LoginPage from "./LoginPage.js";
