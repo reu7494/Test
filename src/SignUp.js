@@ -18,7 +18,7 @@ export default function SignUp() {
   const emailRegEx =
     /^[A-Za-z0-9]([-_.]?[A-Za-z0-9])*@[A-Za-z0-9]([-_.]?[A-Za-z0-9])*\.[A-Za-z]{2,3}$/;
   const passwordRegEx =
-    /^(?=.*[A-Za-z])(?=.*\d)(?=.*[!@#$%^&*])[A-Za-z\d!@#$%^&*]{8,20}$/;
+    /^(?=.*[A-Za-z])(?=.*\d)(?=.*[!@#$%^&*])[A-Za-z\d!@#$%/^&*]{8,20}$/;
 
   const checkUserNameDuplicate = async (userName) => {
     const response = await fetch("http://localhost:8008/check-username", {
@@ -155,9 +155,8 @@ export default function SignUp() {
             onChange={(e) => setConfirmPassword(e.target.value)}
             required
           />
+          <p>영문 대소문자, 숫자, 특수문자를 혼합하여 8~20자로 입력하세요</p>
         </div>
-
-        <p>영문 대소문자, 숫자, 특수문자를 혼합하여 8~20자로 입력하세요</p>
 
         {formErrors.password && (
           <p style={{ color: "red" }}>{formErrors.password}</p>

@@ -2,14 +2,12 @@ import { useState, useEffect, useCallback } from "react";
 import LogoutPage from "./LogoutPage.js";
 import Insertion from "./Insertion.js";
 import Eliminate from "./Eliminate.js";
-import { useNavigate } from "react-router-dom";
+import SignOut from "./SignOut.js";
 
 export default function List({ user, setUser }) {
   const [name, setName] = useState("");
   const [lists, setLists] = useState([]);
   const [error, setError] = useState(null);
-
-  const navigate = useNavigate();
 
   const fetchTodos = useCallback(async () => {
     try {
@@ -50,29 +48,6 @@ export default function List({ user, setUser }) {
     }
   };
 
-  // 회원탈퇴 요청
-  const handleDeleteAccount = async () => {
-    if (!window.confirm("탈퇴를 진행하시겠습니까?")) return;
-
-    try {
-      const response = await fetch(
-        `http://localhost:8008/delete-user/${user.id}`,
-        {
-          method: "DELETE",
-        }
-      );
-
-      if (!response.ok) throw new Error("Failed to delete account");
-
-      alert("회원탈퇴 성공");
-      setUser(null); // 사용자 로그아웃 처리
-      navigate("/Login");
-    } catch (error) {
-      console.error("Error deleting account:", error);
-      setError("Failed to delete account.");
-    }
-  };
-
   return (
     <div className="todo-container">
       <h1>{user.userName}'s To Do List</h1>
@@ -90,7 +65,7 @@ export default function List({ user, setUser }) {
         </ul>
       </div>
       <LogoutPage setUser={setUser} />
-      <button onClick={handleDeleteAccount}>회원탈퇴</button>
+      <SignOut user={user} setUser={setUser} setError={setError} />
     </div>
   );
 }
