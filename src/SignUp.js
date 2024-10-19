@@ -88,6 +88,7 @@ export default function SignUp() {
       if (!response.ok) {
         alert("회원가입 실패");
       } else {
+        localStorage.setItem("name", userName);
         alert("회원가입 성공!");
         navigate("/Login");
       }

@@ -9,6 +9,8 @@ export default function List({ user, setUser }) {
   const [lists, setLists] = useState([]);
   const [error, setError] = useState(null);
 
+  const nickName = localStorage.getItem("name");
+
   const fetchTodos = useCallback(async () => {
     try {
       const response = await fetch(
@@ -50,7 +52,7 @@ export default function List({ user, setUser }) {
 
   return (
     <div className="todo-container">
-      <h1>{user.userName}'s To Do List</h1>
+      <h1>{nickName}'s To Do List</h1>
       <Insertion name={name} setName={setName} handleAdd={handleAdd} />
       <button onClick={handleAdd}>Add</button>
       {error && <p style={{ color: "red" }}>{error}</p>}

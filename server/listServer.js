@@ -201,9 +201,9 @@ app.delete("/delete-user/:id", (req, res) => {
   });
 });
 
-app.use(express.static(path.join(__dirname, "TODOLIST/build")));
+app.use(express.static(path.join(__dirname, "build")));
 app.get("*", function (req, res) {
-  res.sendFile(path.join(__dirname, "/TODOLIST/build/index.html"));
+  res.sendFile(path.join(__dirname, "build", "index.html"));
 });
 
 // 서버 실행

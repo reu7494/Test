@@ -21,7 +21,6 @@ export default function LoginPage({ setUser }) {
         setError(data.message || "로그인 실패");
       } else {
         localStorage.setItem("token", data.token);
-        localStorage.setItem("email", data.email);
         setUser(data.user);
         navigate(`/todos?userId=${data.user.id}`);
       }
