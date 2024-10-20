@@ -7,20 +7,15 @@ export default function SignOut({ user, setUser, setError }) {
     if (!window.confirm("탈퇴를 진행하시겠습니까?")) return;
 
     try {
-      const response = await fetch(
-        `http://localhost:8008/delete-user/${user.id}`,
-        {
-          method: "DELETE",
-        }
-      );
+      await fetch(`http://localhost:8008/delete-user/${user.id}`, {
+        method: "DELETE",
+      });
 
-      if (!response.ok) throw new Error("Failed to delete account");
-
-      alert("회원탈퇴 성공");
+      localStorage.clear();
       setUser(null);
+      alert("회원탈퇴 성공");
       navigate("/Login");
     } catch (error) {
-      console.error("Error deleting account:", error);
       setError("Failed to delete account.");
     }
   };

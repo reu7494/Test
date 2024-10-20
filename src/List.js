@@ -9,7 +9,12 @@ export default function List({ user, setUser }) {
   const [lists, setLists] = useState([]);
   const [error, setError] = useState(null);
 
-  const nickName = localStorage.getItem("name");
+  useEffect(() => {
+    const storedUser = localStorage.getItem("user");
+    if (storedUser) {
+      setUser(JSON.parse(storedUser));
+    }
+  }, [setUser]);
 
   const fetchTodos = useCallback(async () => {
     try {
@@ -52,10 +57,10 @@ export default function List({ user, setUser }) {
 
   return (
     <div className="todo-container">
-      <h1>{nickName}'s To Do List</h1>
+      <h1>{}'s To Do List</h1>
       <Insertion name={name} setName={setName} handleAdd={handleAdd} />
       <button onClick={handleAdd}>Add</button>
-      {error && <p style={{ color: "red" }}>{error}</p>}
+      {error && <p className="error-styles">{error}</p>}
       <div className="scroll">
         <ul>
           {lists.map((list) => (

@@ -88,7 +88,6 @@ export default function SignUp() {
       if (!response.ok) {
         alert("회원가입 실패");
       } else {
-        localStorage.setItem("name", userName);
         alert("회원가입 성공!");
         navigate("/Login");
       }
@@ -117,7 +116,7 @@ export default function SignUp() {
             입력하세요
           </p>
           {formErrors.userName && (
-            <p style={{ color: "red" }}>{formErrors.userName}</p>
+            <p className="error-styles">{formErrors.userName}</p>
           )}
         </div>
 
@@ -133,7 +132,7 @@ export default function SignUp() {
             required
           />
           {formErrors.email && (
-            <p style={{ color: "red" }}>{formErrors.email}</p>
+            <p className="error-styles">{formErrors.email}</p>
           )}
         </div>
 
@@ -160,9 +159,9 @@ export default function SignUp() {
         </div>
 
         {formErrors.password && (
-          <p style={{ color: "red" }}>{formErrors.password}</p>
+          <p className="error-styles">{formErrors.password}</p>
         )}
-        {error && <p style={{ color: "red" }}>{error}</p>}
+        {error && <p className="error-styles">{error}</p>}
 
         <button type="submit">회원가입</button>
         <Link to={"/Login"} className="link-button">

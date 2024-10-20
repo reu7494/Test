@@ -13,7 +13,7 @@ export default function LoginPage({ setUser }) {
       const response = await fetch("http://localhost:8008/Login", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email, password }),
+        body: JSON.stringify({ email: email, password: password }),
       });
 
       const data = await response.json();
@@ -21,6 +21,7 @@ export default function LoginPage({ setUser }) {
         setError(data.message || "로그인 실패");
       } else {
         localStorage.setItem("token", data.token);
+        localStorage.setItem("user", JSON.stringify(data.user));
         setUser(data.user);
         navigate(`/todos?userId=${data.user.id}`);
       }

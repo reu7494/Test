@@ -5,7 +5,7 @@ export default function LogoutPage({ setUser }) {
 
   const handleLogout = () => {
     localStorage.removeItem("token");
-    localStorage.removeItem("email");
+    localStorage.removeItem("user");
     setUser(null);
     navigate("/Login");
   };

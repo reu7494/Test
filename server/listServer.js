@@ -206,7 +206,6 @@ app.get("*", function (req, res) {
   res.sendFile(path.join(__dirname, "build", "index.html"));
 });
 
-// 서버 실행
 app.listen(PORT, () => {
   console.log(`Server is running at http://localhost:8008/`);
 });

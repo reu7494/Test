@@ -188,3 +188,8 @@ input[type="text"]::placeholder {
   font-size: 1rem;
   color: #999;
 }
+
+.error-styles,
+p {
+  color: red;
+}
