@@ -8,19 +8,26 @@ export default function App() {
   const [user, setUser] = useState(null);
 
   useEffect(() => {
-    const storedUser = localStorage.getItem("user");
-    if (storedUser) {
-      setUser(JSON.parse(storedUser));
+    const storedId = localStorage.getItem("userId");
+    const storedEmail = localStorage.getItem("userEmail");
+    const storedUserName = localStorage.getItem("userName");
+
+    if (storedId && storedEmail && storedUserName) {
+      setUser({
+        id: JSON.parse(storedId),
+        email: JSON.parse(storedEmail),
+        userName: JSON.parse(storedUserName),
+      });
     }
   }, []);
 
   return (
     <div>
       <Routes>
+        <Route path="/" element={<LoginPage setUser={setUser} />} />
         <Route path="/SignUp" element={<SignUp />} />
         <Route path="/Login" element={<LoginPage setUser={setUser} />} />
         <Route path="/todos" element={<List user={user} setUser={setUser} />} />
-        <Route path="/" element={<LoginPage />} />
       </Routes>
     </div>
   );

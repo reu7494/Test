@@ -185,19 +185,29 @@ app.delete("/delete-user/:id", (req, res) => {
     return res.status(400).send("User ID is required.");
   }
 
-  const query = "DELETE FROM users WHERE id = ?";
-
-  db.query(query, [id], (err, result) => {
+  // 1. 먼저 해당 사용자의 할 일 목록 삭제
+  const deleteTodosQuery = "DELETE FROM todos WHERE user_id = ?";
+  db.query(deleteTodosQuery, [id], (err, result) => {
     if (err) {
-      console.error("Error deleting user:", err);
-      return res.status(500).send("서버 오류");
+      console.error("Error deleting todos:", err);
+      return res.status(500).send("서버 오류 - 할 일 삭제 실패");
     }
 
-    if (result.affectedRows === 0) {
-      return res.status(404).send("User not found.");
-    }
+    // 2. 사용자 삭제
+    const deleteUserQuery = "DELETE FROM users WHERE id = ?";
+    db.query(deleteUserQuery, [id], (err, result) => {
+      if (err) {
+        console.error("Error deleting user:", err);
+        return res.status(500).send("서버 오류 - 사용자 삭제 실패");
+      }
 
-    res.send("User and related todos deleted successfully.");
+      if (result.affectedRows === 0) {
+        return res.status(404).send("User not found.");
+      }
+
+      // 성공적으로 삭제된 경우
+      res.status(200).send("User and related todos deleted successfully.");
+    });
   });
 });
 

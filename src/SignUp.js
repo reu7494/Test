@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import Swal from "sweetalert2";
 
 export default function SignUp() {
   const [userName, setUserName] = useState("");
@@ -14,11 +15,9 @@ export default function SignUp() {
   });
 
   const navigate = useNavigate();
-  const nameRegEx = /^[a-zA-Z0-9]{3,12}$/;
-  const emailRegEx =
-    /^[A-Za-z0-9]([-_.]?[A-Za-z0-9])*@[A-Za-z0-9]([-_.]?[A-Za-z0-9])*\.[A-Za-z]{2,3}$/;
-  const passwordRegEx =
-    /^(?=.*[A-Za-z])(?=.*\d)(?=.*[!@#$%^&*])[A-Za-z\d!@#$%/^&*]{8,20}$/;
+  const nameRegEx = /^[a-zA-Z][a-zA-Z0-9-_]{2,20}$/;
+  const emailRegEx = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+  const passwordRegEx = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,20}$/;
 
   const checkUserNameDuplicate = async (userName) => {
     const response = await fetch("http://localhost:8008/check-username", {
@@ -86,9 +85,17 @@ export default function SignUp() {
       });
 
       if (!response.ok) {
-        alert("회원가입 실패");
+        Swal.fire({
+          title: "",
+          text: "회원가입 실패",
+          icon: "error",
+        });
       } else {
-        alert("회원가입 성공!");
+        Swal.fire({
+          title: "",
+          text: "회원가입 성공!",
+          icon: "success",
+        });
         navigate("/Login");
       }
     } catch (error) {
@@ -111,10 +118,7 @@ export default function SignUp() {
             }}
             required
           />
-          <p>
-            유저명은 영어(대소문자), 숫자만 허용하며 3자 이상 12자 이하로
-            입력하세요
-          </p>
+          <p>2~20자의 영문 소문자, 숫자와 특수기호(_),(-)만 사용가능합니다.</p>
           {formErrors.userName && (
             <p className="error-styles">{formErrors.userName}</p>
           )}
@@ -155,7 +159,7 @@ export default function SignUp() {
             onChange={(e) => setConfirmPassword(e.target.value)}
             required
           />
-          <p>영문 대소문자, 숫자, 특수문자를 혼합하여 8~20자로 입력하세요</p>
+          <p>8~20자 영문 대 소문자, 숫자를 사용하세요.</p>
         </div>
 
         {formErrors.password && (

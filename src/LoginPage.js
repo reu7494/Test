@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import Swal from "sweetalert2";
 
 export default function LoginPage({ setUser }) {
   const [email, setEmail] = useState("");
@@ -13,20 +14,26 @@ export default function LoginPage({ setUser }) {
       const response = await fetch("http://localhost:8008/Login", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email: email, password: password }),
+        body: JSON.stringify({ email, password }),
       });
 
       const data = await response.json();
       if (!response.ok) {
         setError(data.message || "로그인 실패");
       } else {
-        localStorage.setItem("token", data.token);
-        localStorage.setItem("user", JSON.stringify(data.user));
-        setUser(data.user);
-        navigate(`/todos?userId=${data.user.id}`);
+        const { id, email, userName } = data.user;
+        localStorage.setItem("userId", JSON.stringify(id));
+        localStorage.setItem("userEmail", JSON.stringify(email));
+        localStorage.setItem("userName", JSON.stringify(userName));
+        setUser({ id, email, userName });
+        navigate(`/todos?userId=${id}`);
       }
     } catch (error) {
-      alert("로그인 정보가 일치하지 않습니다. 다시 시도하세요.");
+      Swal.fire({
+        title: "",
+        text: "로그인 정보가 일치하지 않습니다. 다시 시도하세요.",
+        icon: "warning",
+      });
     }
   };
 
