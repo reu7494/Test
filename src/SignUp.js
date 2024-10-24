@@ -20,7 +20,7 @@ export default function SignUp() {
   const passwordRegEx = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,20}$/;
 
   const checkUserNameDuplicate = async (userName) => {
-    const response = await fetch("http://localhost:8008/check-username", {
+    const response = await fetch(`${REACT_APP_API_URL}check-username`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ userName }),
@@ -71,7 +71,7 @@ export default function SignUp() {
     }
 
     try {
-      const response = await fetch("http://localhost:8008/Signup", {
+      const response = await fetch(`${REACT_APP_API_URL}/Signup`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

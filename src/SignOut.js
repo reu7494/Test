@@ -7,7 +7,7 @@ export default function SignOut({ user, setUser, setError }) {
     if (!window.confirm("탈퇴를 진행하시겠습니까?")) return;
 
     try {
-      await fetch(`http://localhost:8008/delete-user/${user.id}`, {
+      await fetch(`${REACT_APP_API_URL}delete-user/${user.id}`, {
         method: "DELETE",
       });
 
@@ -20,7 +20,7 @@ export default function SignOut({ user, setUser, setError }) {
       });
       navigate("/");
     } catch (error) {
-      setError("Failed to delete account.");
+      setError("계정을 삭제하지 못했습니다.");
     }
   };
   return <button onClick={handleDeleteAccount}>회원탈퇴</button>;

@@ -14,7 +14,7 @@ export default function List({ user, setUser }) {
   const fetchTodos = useCallback(async () => {
     try {
       const response = await fetch(
-        `http://localhost:8008/todos?userId=${user.id}`
+        `${REACT_APP_API_URL}todos?userId=${user.id}`
       );
       if (!response.ok) throw new Error("Failed to fetch Todos");
 
@@ -34,7 +34,7 @@ export default function List({ user, setUser }) {
     if (!name.trim()) return;
 
     try {
-      const response = await fetch("http://localhost:8008/todos", {
+      const response = await fetch(`${REACT_APP_API_URL}todos`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ name, userId: user.id }),

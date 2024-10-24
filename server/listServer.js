@@ -21,14 +21,14 @@ const db = mysql.createConnection({
 // MySQL 연결
 db.connect((err) => {
   if (err) {
-    console.error("Error connecting to the database:", err);
+    console.error("데이터베이스에 연결 중 오류 발생:", err);
     return;
   }
-  console.log("Connected to the MySQL database");
+  console.log("MySQL 데이터베이스에 연결됨");
 });
 
 // 유저명 중복 확인 API
-app.post("/check-username", (req, res) => {
+app.post(`${REACT_APP_API_URL}/check-username`, (req, res) => {
   const { userName } = req.body;
 
   if (!userName) {
@@ -38,7 +38,7 @@ app.post("/check-username", (req, res) => {
   const checkQuery = "SELECT * FROM users WHERE userName = ?";
   db.query(checkQuery, [userName], (err, result) => {
     if (err) {
-      console.error("Error checking user existence:", err);
+      console.error("사용자 존재 확인 오류:", err);
       return res.status(500).send("서버 오류");
     }
 
@@ -51,7 +51,7 @@ app.post("/check-username", (req, res) => {
 });
 
 // 회원가입 API
-app.post("/Signup", (req, res) => {
+app.post(`${REACT_APP_API_URL}Signup`, (req, res) => {
   const { email, password, userName } = req.body;
 
   if (!email || !password || !userName) {
@@ -62,7 +62,7 @@ app.post("/Signup", (req, res) => {
   const checkQuery = "SELECT * FROM users WHERE email = ? OR userName = ?";
   db.query(checkQuery, [email, userName], (err, result) => {
     if (err) {
-      console.error("Error checking user existence:", err);
+      console.error("사용자 존재 확인 오류:", err);
       return res.status(500).send("서버 오류");
     }
 
@@ -75,31 +75,31 @@ app.post("/Signup", (req, res) => {
       "INSERT INTO users (email, password, userName) VALUES (?, ?, ?)";
     db.query(insertQuery, [email, password, userName], (err, _result) => {
       if (err) {
-        console.error("Error registering user:", err);
+        console.error("사용자 등록 오류:", err);
         return res.status(500).send("서버 오류");
       }
-      res.status(201).send("User registered successfully.");
+      res.status(201).send("사용자가 성공적으로 등록되었습니다.");
     });
   });
 });
 
 // 로그인 API
-app.post("/Login", (req, res) => {
+app.post(`${REACT_APP_API_URL}Login`, (req, res) => {
   const { email, password } = req.body;
 
   if (!email || !password) {
-    return res.status(400).send("Email and password are required.");
+    return res.status(400).send("이메일과 비밀번호가 필요합니다.");
   }
 
   const query = "SELECT * FROM users WHERE email = ? AND password = ?";
   db.query(query, [email, password], (err, result) => {
     if (err) {
-      console.error("Error logging in:", err);
+      console.error("로그인 오류:", err);
       return res.status(500).send("서버 오류");
     }
 
     if (result.length === 0) {
-      return res.status(401).send("Invalid email or password.");
+      return res.status(401).send("잘못된 이메일 또는 비밀번호입니다.");
     }
 
     const user = result[0];
@@ -117,17 +117,17 @@ app.post("/Login", (req, res) => {
 });
 
 // 사용자별 할 일 목록 가져오기
-app.get("/todos", (req, res) => {
+app.get(`${REACT_APP_API_URL}todos`, (req, res) => {
   const { userId } = req.query;
 
   if (!userId) {
-    return res.status(400).send("User ID is required.");
+    return res.status(400).send("사용자 ID가 필요합니다.");
   }
 
   const query = "SELECT * FROM todos WHERE user_id = ?";
   db.query(query, [userId], (err, result) => {
     if (err) {
-      console.error("Error fetching todos:", err);
+      console.error("가져오기 오류:", err);
       return res.status(500).send("서버 오류");
     }
 
@@ -136,17 +136,17 @@ app.get("/todos", (req, res) => {
 });
 
 // 새로운 할 일 추가
-app.post("/todos", (req, res) => {
+app.post(`${REACT_APP_API_URL}todos`, (req, res) => {
   const { name, userId } = req.body;
 
   if (!name || !userId) {
-    return res.status(400).send("Task name and user ID are required.");
+    return res.status(400).send("작업 이름과 사용자 ID가 필요합니다.");
   }
 
   const query = "INSERT INTO todos (name, user_id) VALUES (?, ?)";
   db.query(query, [name, userId], (err, result) => {
     if (err) {
-      console.error("Error adding todo:", err);
+      console.error("작업 추가 오류:", err);
       return res.status(500).send("서버 오류");
     }
 
@@ -155,58 +155,60 @@ app.post("/todos", (req, res) => {
 });
 
 // 할 일 삭제
-app.delete("/todos/:id", (req, res) => {
+app.delete(`${REACT_APP_API_URL}/todos/:id`, (req, res) => {
   const { id } = req.params;
 
   if (!id) {
-    return res.status(400).send("Todo ID is required.");
+    return res.status(400).send("작업 ID가 필요합니다.");
   }
 
   const query = "DELETE FROM todos WHERE id = ?";
   db.query(query, [id], (err, result) => {
     if (err) {
-      console.error("Error deleting todo:", err);
+      console.error("삭제 오류:", err);
       return res.status(500).send("서버 오류");
     }
 
     if (result.affectedRows === 0) {
-      return res.status(404).send("Todo not found.");
+      return res.status(404).send("Todo를 찾을 수 없음.");
     }
 
-    res.send("Todo deleted successfully.");
+    res.send("Todo 삭제 성공");
   });
 });
 
 // 회원탈퇴 API
-app.delete("/delete-user/:id", (req, res) => {
+app.delete(`${REACT_APP_API_URL}delete-user/:id`, (req, res) => {
   const { id } = req.params;
 
   if (!id) {
-    return res.status(400).send("User ID is required.");
+    return res.status(400).send("사용자 ID가 필요합니다.");
   }
 
-  // 1. 먼저 해당 사용자의 할 일 목록 삭제
+  // 사용자의 할 일 목록 삭제
   const deleteTodosQuery = "DELETE FROM todos WHERE user_id = ?";
   db.query(deleteTodosQuery, [id], (err, result) => {
     if (err) {
-      console.error("Error deleting todos:", err);
+      console.error("todos 삭제 오류:", err);
       return res.status(500).send("서버 오류 - 할 일 삭제 실패");
     }
 
-    // 2. 사용자 삭제
+    // 사용자 삭제
     const deleteUserQuery = "DELETE FROM users WHERE id = ?";
     db.query(deleteUserQuery, [id], (err, result) => {
       if (err) {
-        console.error("Error deleting user:", err);
+        console.error("사용자 삭제 오류:", err);
         return res.status(500).send("서버 오류 - 사용자 삭제 실패");
       }
 
       if (result.affectedRows === 0) {
-        return res.status(404).send("User not found.");
+        return res.status(404).send("사용자를 찾을 수 없습니다.");
       }
 
-      // 성공적으로 삭제된 경우
-      res.status(200).send("User and related todos deleted successfully.");
+      //성공적으로 삭제된 경우
+      res
+        .status(200)
+        .send("사용자 및 관련 작업관리가 성공적으로 삭제되었습니다.");
     });
   });
 });
@@ -217,5 +219,5 @@ app.get("*", function (req, res) {
 });
 
 app.listen(PORT, () => {
-  console.log(`Server is running at http://localhost:8008/`);
+  console.log(`서버가 ${REACT_APP_API_URL}에서 실행 중입니다`);
 });
