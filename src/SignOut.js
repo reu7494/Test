@@ -7,7 +7,7 @@ export default function SignOut({ user, setUser, setError }) {
     if (!window.confirm("탈퇴를 진행하시겠습니까?")) return;
 
     try {
-      await fetch(`${REACT_APP_API_URL}delete-user/${user.id}`, {
+      await fetch(`${REACT_APP_API_URL}/delete-user/${user.id}`, {
         method: "DELETE",
       });
 
