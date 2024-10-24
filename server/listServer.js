@@ -28,7 +28,7 @@ db.connect((err) => {
 });
 
 // 유저명 중복 확인 API
-app.post(`${REACT_APP_API_URL}/check-username`, (req, res) => {
+app.post("/check-username", (req, res) => {
   const { userName } = req.body;
 
   if (!userName) {
@@ -51,7 +51,7 @@ app.post(`${REACT_APP_API_URL}/check-username`, (req, res) => {
 });
 
 // 회원가입 API
-app.post(`${REACT_APP_API_URL}Signup`, (req, res) => {
+app.post("/Signup", (req, res) => {
   const { email, password, userName } = req.body;
 
   if (!email || !password || !userName) {
@@ -84,7 +84,7 @@ app.post(`${REACT_APP_API_URL}Signup`, (req, res) => {
 });
 
 // 로그인 API
-app.post(`${REACT_APP_API_URL}Login`, (req, res) => {
+app.post("/Login", (req, res) => {
   const { email, password } = req.body;
 
   if (!email || !password) {
@@ -117,7 +117,7 @@ app.post(`${REACT_APP_API_URL}Login`, (req, res) => {
 });
 
 // 사용자별 할 일 목록 가져오기
-app.get(`${REACT_APP_API_URL}todos`, (req, res) => {
+app.get("/todos", (req, res) => {
   const { userId } = req.query;
 
   if (!userId) {
@@ -136,7 +136,7 @@ app.get(`${REACT_APP_API_URL}todos`, (req, res) => {
 });
 
 // 새로운 할 일 추가
-app.post(`${REACT_APP_API_URL}todos`, (req, res) => {
+app.post("/todos", (req, res) => {
   const { name, userId } = req.body;
 
   if (!name || !userId) {
@@ -155,7 +155,7 @@ app.post(`${REACT_APP_API_URL}todos`, (req, res) => {
 });
 
 // 할 일 삭제
-app.delete(`${REACT_APP_API_URL}/todos/:id`, (req, res) => {
+app.delete("/todos/:id", (req, res) => {
   const { id } = req.params;
 
   if (!id) {
@@ -178,7 +178,7 @@ app.delete(`${REACT_APP_API_URL}/todos/:id`, (req, res) => {
 });
 
 // 회원탈퇴 API
-app.delete(`${REACT_APP_API_URL}delete-user/:id`, (req, res) => {
+app.delete("/delete-user/:id", (req, res) => {
   const { id } = req.params;
 
   if (!id) {
@@ -205,7 +205,7 @@ app.delete(`${REACT_APP_API_URL}delete-user/:id`, (req, res) => {
         return res.status(404).send("사용자를 찾을 수 없습니다.");
       }
 
-      //성공적으로 삭제된 경우
+      // 성공적으로 삭제된 경우
       res
         .status(200)
         .send("사용자 및 관련 작업관리가 성공적으로 삭제되었습니다.");
