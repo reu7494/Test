@@ -7,11 +7,12 @@ export default function LoginPage({ setUser }) {
   const [password, setPassword] = useState("");
   const [error, setError] = useState(null);
   const navigate = useNavigate();
+  const apiUrl = process.env.REACT_APP_API_URL;
 
   const handleLogin = async (e) => {
     e.preventDefault();
     try {
-      const response = await fetch(`${REACT_APP_API_URL}/Login`, {
+      const response = await fetch(`${apiUrl}/Login`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email, password }),

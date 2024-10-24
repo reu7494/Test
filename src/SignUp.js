@@ -8,6 +8,7 @@ export default function SignUp() {
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [error, setError] = useState(null);
+  const apiUrl = process.env.REACT_APP_API_URL;
   const [formErrors, setFormErrors] = useState({
     userName: "",
     email: "",
@@ -20,7 +21,7 @@ export default function SignUp() {
   const passwordRegEx = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,20}$/;
 
   const checkUserNameDuplicate = async (userName) => {
-    const response = await fetch(`${REACT_APP_API_URL}/check-username`, {
+    const response = await fetch(`${apiUrl}/check-username`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ userName }),
@@ -71,7 +72,7 @@ export default function SignUp() {
     }
 
     try {
-      const response = await fetch(`${REACT_APP_API_URL}/Signup`, {
+      const response = await fetch(`${apiUrl}/Signup`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

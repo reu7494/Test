@@ -3,11 +3,12 @@ import Swal from "sweetalert2";
 
 export default function SignOut({ user, setUser, setError }) {
   const navigate = useNavigate();
+  const apiUrl = process.env.REACT_APP_API_URL;
   const handleDeleteAccount = async () => {
     if (!window.confirm("탈퇴를 진행하시겠습니까?")) return;
 
     try {
-      await fetch(`${REACT_APP_API_URL}/delete-user/${user.id}`, {
+      await fetch(`${apiUrl}/delete-user/${user.id}`, {
         method: "DELETE",
       });
 
