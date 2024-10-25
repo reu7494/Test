@@ -23,7 +23,7 @@ export default function List({ user, setUser }) {
       console.error("Error fetching Todos:", error);
       setError("Failed to load tasks.");
     }
-  }, [user]);
+  }, [apiUrl, user.id]);
 
   useEffect(() => {
     if (user) fetchTodos();

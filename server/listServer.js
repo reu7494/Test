@@ -1,7 +1,7 @@
 const express = require("express");
 const mysql = require("mysql2");
 const cors = require("cors");
-const PORT = process.env.PORT || 8008;
+const port = process.env.PORT || 8008;
 const path = require("path");
 const jwt = require("jsonwebtoken");
 const SECRET_KEY = "your_secret_key";
@@ -218,6 +218,6 @@ app.get("*", function (req, res) {
   res.sendFile(path.join(__dirname, "build", "index.html"));
 });
 
-app.listen(PORT, () => {
-  console.log("서버가 https://jotup.netlify.app에서 실행 중입니다");
+app.listen(port, () => {
+  console.log(`서버가 ${port}번 포트에서 실행 중입니다.`);
 });
