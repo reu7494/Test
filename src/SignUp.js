@@ -16,12 +16,12 @@ export default function SignUp() {
   });
 
   const navigate = useNavigate();
-  const nameRegEx = /^[a-zA-Z][a-zA-Z0-9-_]{2,20}$/;
+  const nameRegEx = /^[a-z][a-z0-9-_]{2,20}$/;
   const emailRegEx = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
   const passwordRegEx = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,20}$/;
 
   const checkUserNameDuplicate = async (userName) => {
-    const response = await fetch(`${apiUrl}/check-username`, {
+    const response = await fetch("/check-username", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ userName }),

@@ -5,7 +5,6 @@ const PORT = process.env.PORT || 8008;
 const path = require("path");
 const jwt = require("jsonwebtoken");
 const SECRET_KEY = "your_secret_key";
-const apiUrl = process.env.REACT_APP_API_URL;
 
 const app = express();
 app.use(cors());
