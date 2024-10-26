@@ -7,7 +7,11 @@ const jwt = require("jsonwebtoken");
 const SECRET_KEY = "your_secret_key";
 
 const app = express();
-app.use(cors());
+app.use(
+  cors({
+    origin: "https://jotup.netlify.app/",
+  })
+);
 app.use(express.json());
 
 // MySQL 데이터베이스 설정
