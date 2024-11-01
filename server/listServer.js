@@ -4,7 +4,7 @@ const cors = require("cors");
 const port = process.env.PORT || 8008;
 const path = require("path");
 const jwt = require("jsonwebtoken");
-const SECRET_KEY = "your_secret_key";
+const REACT_APP_API_URL = "your_secret_key";
 
 const app = express();
 const corsOptions = {
@@ -34,7 +34,7 @@ db.connect((err) => {
 });
 
 // 유저명 중복 확인 API
-app.post("/check-username", (req, res) => {
+app.post("/api/check-username", (req, res) => {
   const { userName } = req.body;
 
   if (!userName) {
@@ -57,14 +57,13 @@ app.post("/check-username", (req, res) => {
 });
 
 // 회원가입 API
-app.post("/Signup", (req, res) => {
+app.post("/api/Signup", (req, res) => {
   const { email, password, userName } = req.body;
 
   if (!email || !password || !userName) {
     return res.status(400).send("Email, password 및 유저명이 필요합니다.");
   }
 
-  // 이메일 또는 유저명 중복 확인
   const checkQuery = "SELECT * FROM users WHERE email = ? OR userName = ?";
   db.query(checkQuery, [email, userName], (err, result) => {
     if (err) {
@@ -76,7 +75,6 @@ app.post("/Signup", (req, res) => {
       return res.status(400).send("이미 존재하는 이메일 또는 유저명입니다.");
     }
 
-    // 유저 등록
     const insertQuery =
       "INSERT INTO users (email, password, userName) VALUES (?, ?, ?)";
     db.query(insertQuery, [email, password, userName], (err, _result) => {
@@ -90,7 +88,7 @@ app.post("/Signup", (req, res) => {
 });
 
 // 로그인 API
-app.post("/Login", (req, res) => {
+app.post("/api/Login", (req, res) => {
   const { email, password } = req.body;
 
   if (!email || !password) {
@@ -110,20 +108,23 @@ app.post("/Login", (req, res) => {
 
     const user = result[0];
 
-    // JWT 토큰 발급
-    const token = jwt.sign({ id: user.id, email: user.email }, SECRET_KEY, {
-      expiresIn: "1h",
-    });
+    const token = jwt.sign(
+      { id: user.id, email: user.email },
+      REACT_APP_API_URL,
+      {
+        expiresIn: "1h",
+      }
+    );
 
     res.json({
       user: { id: user.id, email: user.email, userName: user.userName },
-      token, // 클라이언트로 토큰 전달
+      token,
     });
   });
 });
 
 // 사용자별 할 일 목록 가져오기
-app.get("/todos", (req, res) => {
+app.get("/api/todos", (req, res) => {
   const { userId } = req.query;
 
   if (!userId) {
@@ -142,7 +143,7 @@ app.get("/todos", (req, res) => {
 });
 
 // 새로운 할 일 추가
-app.post("/todos", (req, res) => {
+app.post("/api/todos", (req, res) => {
   const { name, userId } = req.body;
 
   if (!name || !userId) {
@@ -161,7 +162,7 @@ app.post("/todos", (req, res) => {
 });
 
 // 할 일 삭제
-app.delete("/todos/:id", (req, res) => {
+app.delete("/api/todos/:id", (req, res) => {
   const { id } = req.params;
 
   if (!id) {
@@ -184,14 +185,13 @@ app.delete("/todos/:id", (req, res) => {
 });
 
 // 회원탈퇴 API
-app.delete("/delete-user/:id", (req, res) => {
+app.delete("/api/delete-user/:id", (req, res) => {
   const { id } = req.params;
 
   if (!id) {
     return res.status(400).send("사용자 ID가 필요합니다.");
   }
 
-  // 사용자의 할 일 목록 삭제
   const deleteTodosQuery = "DELETE FROM todos WHERE user_id = ?";
   db.query(deleteTodosQuery, [id], (err, result) => {
     if (err) {
@@ -199,7 +199,6 @@ app.delete("/delete-user/:id", (req, res) => {
       return res.status(500).send("서버 오류 - 할 일 삭제 실패");
     }
 
-    // 사용자 삭제
     const deleteUserQuery = "DELETE FROM users WHERE id = ?";
     db.query(deleteUserQuery, [id], (err, result) => {
       if (err) {
@@ -211,7 +210,6 @@ app.delete("/delete-user/:id", (req, res) => {
         return res.status(404).send("사용자를 찾을 수 없습니다.");
       }
 
-      // 성공적으로 삭제된 경우
       res
         .status(200)
         .send("사용자 및 관련 작업관리가 성공적으로 삭제되었습니다.");
@@ -219,8 +217,11 @@ app.delete("/delete-user/:id", (req, res) => {
   });
 });
 
+// 정적 파일 제공
 app.use(express.static(path.join(__dirname, "build")));
-app.get("*", function (req, res) {
+
+// 모든 기타 요청은 index.html을 제공
+app.get("*", (req, res) => {
   res.sendFile(path.join(__dirname, "build", "index.html"));
 });
 
