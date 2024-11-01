@@ -3,12 +3,12 @@ import { Link, useNavigate } from "react-router-dom";
 import Swal from "sweetalert2";
 
 export default function SignUp() {
+  const apiUrl = process.env.REACT_APP_API_URL;
   const [userName, setUserName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [error, setError] = useState(null);
-  const apiUrl = process.env.REACT_APP_API_URL;
   const [formErrors, setFormErrors] = useState({
     userName: "",
     email: "",
