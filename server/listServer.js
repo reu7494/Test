@@ -3,7 +3,7 @@ const mysql = require("mysql2");
 const cors = require("cors");
 const port = process.env.PORT || 8008;
 const path = require("path");
-const jwt = require("jsonwebtoken");
+require("dotenv").config();
 
 const app = express();
 const corsOptions = {
@@ -17,10 +17,10 @@ app.use(express.json());
 
 // MySQL 데이터베이스 설정
 const db = mysql.createConnection({
-  host: "localhost",
-  user: "root",
-  password: "1234",
-  database: "todolistdatabase",
+  host: process.env.DB_HOST,
+  user: process.env.DB_USER,
+  password: process.env.DB_PASSWORD,
+  database: process.env.DB_NAME,
 });
 
 // MySQL 연결
@@ -86,7 +86,6 @@ app.post("/api/Signup", (req, res) => {
   });
 });
 
-// 로그인 API
 // 로그인 API
 app.post("/api/Login", (req, res) => {
   const { email, password } = req.body;
@@ -208,10 +207,8 @@ app.delete("/api/delete-user/:id", (req, res) => {
   });
 });
 
-// 정적 파일 제공
 app.use(express.static(path.join(__dirname, "build")));
 
-// 모든 기타 요청은 index.html을 제공
 app.get("*", (req, res) => {
   res.sendFile(path.join(__dirname, "build", "index.html"));
 });
