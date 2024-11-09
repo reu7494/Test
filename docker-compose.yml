@@ -1,32 +1,33 @@
 version: "3.8"
 services:
-  app:
+  frontend:
+    build:
+      context: ./frontend
+    ports:
+      - "80:3000" # 리액트 포트 매핑
+    environment:
+      - REACT_APP_API_URL=http://119.202.226.58:8008
+    networks:
+      - my-network
+
+  backend:
     build:
       context: ./server
-      dockerfile: Dockerfile
     ports:
-      - "8008:8008"
-    env_file:
-      - .env
-    depends_on:
-      - db
+      - "8008:8008" # 백엔드 포트 매핑
     networks:
       - my-network
 
   db:
     image: mysql:latest
+    ports:
+      - "3306:3306" # MySQL 포트 매핑
     environment:
-      MYSQL_ROOT_PASSWORD: ${DB_PASSWORD}
-      MYSQL_DATABASE: ${DB_NAME}
-      MYSQL_USER: ${DB_USER}
-      MYSQL_PASSWORD: ${DB_PASSWORD}
-    volumes:
-      - db_data:/var/lib/mysql
+      MYSQL_ROOT_PASSWORD: 1234
+      MYSQL_DATABASE: todolistdatabase
     networks:
       - my-network
 
-volumes:
-  db_data:
-
 networks:
   my-network:
+    driver: bridge

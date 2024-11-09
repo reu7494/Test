@@ -1,15 +1,11 @@
 {
   "name": "server",
   "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
+  "description": "Node.js Express server for ToDoList app",
+  "main": "ListServer.js",
   "scripts": {
-    "test": "react-scripts test",
-    "start": "react-scripts start",
-    "build": "react-scripts build",
-    "eject": "react-scripts eject",
-    "predeploy": "npm run build",
-    "deploy": "gh-pages -d build"
+    "start": "node ListServer.js",
+    "dev": "nodemon ListServer.js"
   },
   "keywords": [],
   "author": "",
@@ -17,12 +13,12 @@
   "dependencies": {
     "body-parser": "^1.20.2",
     "cors": "^2.8.5",
-    "cros": "^1.0.1",
     "express": "^4.19.2",
     "mysql": "^2.18.1",
-    "mysql2": "^3.11.0"
+    "mysql2": "^3.11.0",
+    "dotenv": "^16.0.3"
   },
   "devDependencies": {
-    "webpack-cli": "^5.1.4"
+    "nodemon": "^2.0.22"
   }
 }

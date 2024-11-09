@@ -7,7 +7,7 @@ require("dotenv").config();
 
 const app = express();
 const corsOptions = {
-  origin: "https://jotup.netlify.app",
+  origin: "*",
   methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
   credentials: true,
 };
@@ -213,6 +213,11 @@ app.get("*", (req, res) => {
   res.sendFile(path.join(__dirname, "build", "index.html"));
 });
 
-app.listen(port, () => {
+app.get("/api/health", (req, res) => {
+  res.send({ status: "OK" });
+});
+
+const PORT = process.env.PORT || 8008;
+app.listen(PORT, () => {
   console.log(`서버가 ${port}번 포트에서 실행 중입니다.`);
 });
