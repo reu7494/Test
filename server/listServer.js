@@ -7,7 +7,7 @@ require("dotenv").config();
 
 const app = express();
 const corsOptions = {
-  origin: "*",
+  origin: "https://jotup.netlify.app",
   methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
   credentials: true,
 };
