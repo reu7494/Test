@@ -1,33 +1,29 @@
 version: "3.8"
-services:
-  frontend:
-    build:
-      context: ./frontend
-    ports:
-      - "80:3000" # 리액트 포트 매핑
-    environment:
-      - REACT_APP_API_URL=http://119.202.226.58:8008
-    networks:
-      - my-network
 
+services:
   backend:
     build:
-      context: ./server
+      context: .
+      dockerfile: Dockerfile
     ports:
-      - "8008:8008" # 백엔드 포트 매핑
-    networks:
-      - my-network
+      - "8008:8008"
+    environment:
+      - DB_HOST=db
+      - DB_USER=root
+      - DB_PASSWORD=1234
+      - DB_NAME=todolistdatabase
+    depends_on:
+      - db
 
   db:
-    image: mysql:latest
-    ports:
-      - "3306:3306" # MySQL 포트 매핑
+    image: mysql:8
     environment:
       MYSQL_ROOT_PASSWORD: 1234
       MYSQL_DATABASE: todolistdatabase
-    networks:
-      - my-network
+    ports:
+      - "3306:3306"
+    volumes:
+      - db_data:/var/lib/mysql
 
-networks:
-  my-network:
-    driver: bridge
+volumes:
+  db_data:
