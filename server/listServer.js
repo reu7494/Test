@@ -211,8 +211,15 @@ app.delete("/delete-user/:id", (req, res) => {
 });
 
 app.use((req, res, next) => {
-  res.header("Content-Type", "application/json");
-  next();
+  res.header("Access-Control-Allow-Origin", "https://listnotepad.netlify.app");
+  res.header("Access-Control-Allow-Headers", "Content-Type, Authorization");
+  res.header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
+  res.header("Access-Control-Allow-Credentials", "true");
+  if (req.method === "OPTIONS") {
+    res.sendStatus(200);
+  } else {
+    next();
+  }
 });
 
 app.use(express.static(path.join(__dirname, "build")));
