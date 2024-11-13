@@ -8,7 +8,10 @@ require("dotenv").config();
 
 const app = express();
 const corsOptions = {
-  origin: ["https://listnotepad.netlify.app"],
+  origin: [
+    /*"https://listnotepad.netlify.app"*/ "http://localhost:3000",
+    "http://211.105.138.254:3000",
+  ],
   methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
   allowedHeaders: ["Content-Type", "Authorization"],
   credentials: true,
@@ -234,5 +237,5 @@ app.get("/api/health", (req, res) => {
 
 const PORT = process.env.PORT || 8008;
 app.listen(PORT, () => {
-  console.log(`서버가 ${prototype}번 포트에서 실행 중입니다.`);
+  console.log(`서버가 ${PORT}번 포트에서 실행 중입니다.`);
 });
