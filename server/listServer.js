@@ -7,10 +7,10 @@ require("dotenv").config();
 
 const app = express();
 const corsOptions = {
-  origin: "https://listnotepad.netlify.app",
-  methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
-  credentials: true,
+  origin: ["https://listnotepad.netlify.app"],
+  methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
   allowedHeaders: ["Content-Type", "Authorization"],
+  credentials: true,
 };
 
 app.use(cors(corsOptions));
@@ -34,7 +34,7 @@ db.connect((err) => {
 });
 
 // 유저명 중복 확인 API
-app.post("/api/check-username", (req, res) => {
+app.post("/check-username", (req, res) => {
   const { userName } = req.body;
 
   if (!userName) {
@@ -57,7 +57,7 @@ app.post("/api/check-username", (req, res) => {
 });
 
 // 회원가입 API
-app.post("/api/Signup", (req, res) => {
+app.post("/Signup", (req, res) => {
   const { email, password, userName } = req.body;
 
   if (!email || !password || !userName) {
@@ -88,7 +88,7 @@ app.post("/api/Signup", (req, res) => {
 });
 
 // 로그인 API
-app.post("/api/Login", (req, res) => {
+app.post("/Login", (req, res) => {
   const { email, password } = req.body;
 
   if (!email || !password) {
@@ -115,7 +115,7 @@ app.post("/api/Login", (req, res) => {
 });
 
 // 사용자별 할 일 목록 가져오기
-app.get("/api/todos", (req, res) => {
+app.get("/todos", (req, res) => {
   const { userId } = req.query;
 
   if (!userId) {
@@ -134,7 +134,7 @@ app.get("/api/todos", (req, res) => {
 });
 
 // 새로운 할 일 추가
-app.post("/api/todos", (req, res) => {
+app.post("/todos", (req, res) => {
   const { name, userId } = req.body;
 
   if (!name || !userId) {
@@ -153,7 +153,7 @@ app.post("/api/todos", (req, res) => {
 });
 
 // 할 일 삭제
-app.delete("/api/todos/:id", (req, res) => {
+app.delete("/todos/:id", (req, res) => {
   const { id } = req.params;
 
   if (!id) {
@@ -176,7 +176,7 @@ app.delete("/api/todos/:id", (req, res) => {
 });
 
 // 회원탈퇴 API
-app.delete("/api/delete-user/:id", (req, res) => {
+app.delete("/delete-user/:id", (req, res) => {
   const { id } = req.params;
 
   if (!id) {
@@ -207,6 +207,8 @@ app.delete("/api/delete-user/:id", (req, res) => {
     });
   });
 });
+
+app.options("*", cors(corsOptions));
 
 app.use((req, res, next) => {
   res.header("Content-Type", "application/json");

@@ -27,6 +27,10 @@ export default function SignUp() {
       body: JSON.stringify({ userName }),
     });
 
+    if (!response.ok) {
+      throw new Error("Failed to check username");
+    }
+
     const data = await response.json();
     return data.exists;
   };
