@@ -25,6 +25,8 @@ export default function SignUp() {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ userName }),
+      mode: "cors",
+      credentials: "include",
     });
 
     if (!response.ok) {
