@@ -1,7 +1,7 @@
 const express = require("express");
 const mysql = require("mysql2");
 const cors = require("cors");
-const port = process.env.PORT || 8008;
+const PORT = process.env.PORT || 8000;
 const path = require("path");
 const { prototype } = require("stream");
 require("dotenv").config();
@@ -235,7 +235,6 @@ app.get("/api/health", (req, res) => {
   res.send({ status: "OK" });
 });
 
-const PORT = process.env.PORT || 8008;
 app.listen(PORT, () => {
   console.log(`서버가 ${PORT}번 포트에서 실행 중입니다.`);
 });
