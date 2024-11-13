@@ -3,6 +3,7 @@ const mysql = require("mysql2");
 const cors = require("cors");
 const port = process.env.PORT || 8008;
 const path = require("path");
+const { prototype } = require("stream");
 require("dotenv").config();
 
 const app = express();
@@ -14,6 +15,7 @@ const corsOptions = {
 };
 
 app.use(cors(corsOptions));
+app.options("*", cors(corsOptions));
 app.use(express.json());
 
 // MySQL 데이터베이스 설정
@@ -208,8 +210,6 @@ app.delete("/delete-user/:id", (req, res) => {
   });
 });
 
-app.options("*", cors(corsOptions));
-
 app.use((req, res, next) => {
   res.header("Content-Type", "application/json");
   next();
@@ -227,5 +227,5 @@ app.get("/api/health", (req, res) => {
 
 const PORT = process.env.PORT || 8008;
 app.listen(PORT, () => {
-  console.log(`서버가 ${port}번 포트에서 실행 중입니다.`);
+  console.log(`서버가 ${prototype}번 포트에서 실행 중입니다.`);
 });
