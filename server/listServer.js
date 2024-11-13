@@ -7,9 +7,10 @@ require("dotenv").config();
 
 const app = express();
 const corsOptions = {
-  origin: "https://jotup.netlify.app",
+  origin: "https://listnotepad.netlify.app",
   methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
   credentials: true,
+  allowedHeaders: ["Content-Type", "Authorization"],
 };
 
 app.use(cors(corsOptions));
@@ -205,6 +206,11 @@ app.delete("/api/delete-user/:id", (req, res) => {
         .send("사용자 및 관련 작업관리가 성공적으로 삭제되었습니다.");
     });
   });
+});
+
+app.use((req, res, next) => {
+  res.header("Content-Type", "application/json");
+  next();
 });
 
 app.use(express.static(path.join(__dirname, "build")));
