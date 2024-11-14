@@ -8,11 +8,7 @@ require("dotenv").config();
 
 const app = express();
 const corsOptions = {
-  origin: [
-    "http://localhost:3000",
-    "http://172.30.1.40:3000",
-    "http://listnotepad.netlify.app",
-  ],
+  origin: "*",
   methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
   allowedHeaders: ["Content-Type", "Authorization"],
   credentials: true,
