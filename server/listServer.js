@@ -8,7 +8,20 @@ require("dotenv").config();
 
 const app = express();
 const corsOptions = {
-  origin: "*",
+  origin: (origin, callback) => {
+    const allowedOrigins = [
+      "http://localhost:3000",
+      "http://localhost:8008",
+      "http://211.105.138.241:3000",
+      "http://211.105.138.241:8000",
+    ];
+
+    if (!origin || allowedOrigins.includes(origin)) {
+      callback(null, true);
+    } else {
+      callback(new Error("CORS 정책에 의해 차단된 요청입니다."));
+    }
+  },
   methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
   allowedHeaders: ["Content-Type", "Authorization"],
   credentials: true,
@@ -36,7 +49,7 @@ db.connect((err) => {
 });
 
 // 유저명 중복 확인 API
-app.post("/check-username", (req, res) => {
+app.post("/api/check-username", (req, res) => {
   const { userName } = req.body;
 
   if (!userName) {
@@ -59,7 +72,7 @@ app.post("/check-username", (req, res) => {
 });
 
 // 회원가입 API
-app.post("/Signup", (req, res) => {
+app.post("/api/Signup", (req, res) => {
   const { email, password, userName } = req.body;
 
   if (!email || !password || !userName) {
@@ -90,7 +103,7 @@ app.post("/Signup", (req, res) => {
 });
 
 // 로그인 API
-app.post("/Login", (req, res) => {
+app.post("/api/Login", (req, res) => {
   const { email, password } = req.body;
 
   if (!email || !password) {
@@ -117,7 +130,7 @@ app.post("/Login", (req, res) => {
 });
 
 // 사용자별 할 일 목록 가져오기
-app.get("/todos", (req, res) => {
+app.get("/api/todos", (req, res) => {
   const { userId } = req.query;
 
   if (!userId) {
@@ -136,7 +149,7 @@ app.get("/todos", (req, res) => {
 });
 
 // 새로운 할 일 추가
-app.post("/todos", (req, res) => {
+app.post("/api/todos", (req, res) => {
   const { name, userId } = req.body;
 
   if (!name || !userId) {
@@ -155,7 +168,7 @@ app.post("/todos", (req, res) => {
 });
 
 // 할 일 삭제
-app.delete("/todos/:id", (req, res) => {
+app.delete("/api/todos/:id", (req, res) => {
   const { id } = req.params;
 
   if (!id) {
@@ -178,7 +191,7 @@ app.delete("/todos/:id", (req, res) => {
 });
 
 // 회원탈퇴 API
-app.delete("/delete-user/:id", (req, res) => {
+app.delete("/api/delete-user/:id", (req, res) => {
   const { id } = req.params;
 
   if (!id) {
@@ -211,10 +224,24 @@ app.delete("/delete-user/:id", (req, res) => {
 });
 
 app.use((req, res, next) => {
-  res.header("Access-Control-Allow-Origin", "https://listnotepad.netlify.app");
-  res.header("Access-Control-Allow-Headers", "Content-Type, Authorization");
-  res.header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
-  res.header("Access-Control-Allow-Credentials", "true");
+  const allowedOrigins = [
+    "http://localhost:3000",
+    "http://localhost:8008",
+    "http://211.105.138.241:3000",
+    "http://211.105.138.241:8000",
+  ];
+  const origin = req.headers.origin;
+
+  if (allowedOrigins.includes(origin)) {
+    res.setHeader("Access-Control-Allow-Origin", origin);
+  }
+
+  res.setHeader("Access-Control-Allow-Headers", "Content-Type, Authorization");
+  res.setHeader(
+    "Access-Control-Allow-Methods",
+    "GET, POST, PUT, DELETE, OPTIONS"
+  );
+  res.setHeader("Access-Control-Allow-Credentials", "true");
   if (req.method === "OPTIONS") {
     res.sendStatus(200);
   } else {
@@ -222,10 +249,10 @@ app.use((req, res, next) => {
   }
 });
 
-app.use(express.static(path.join(__dirname, "build")));
+app.use(express.static(path.join(__dirname, "../build")));
 
 app.get("*", (req, res) => {
-  res.sendFile(path.join(__dirname, "build", "index.html"));
+  res.sendFile(path.join(__dirname, "../build", "index.html"));
 });
 
 app.get("/api/health", (req, res) => {
