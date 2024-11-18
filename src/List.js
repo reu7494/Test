@@ -8,15 +8,15 @@ export default function List({ user, setUser }) {
   const [name, setName] = useState("");
   const [lists, setLists] = useState([]);
   const [error, setError] = useState(null);
-  const [isEdit, setIsEdit] = useState(flase);
-  const toggleIsEdit = () => setIsEdit(!isEdit);
+  //const [isEdit, setIsEdit] = useState(flase);
+  //const toggleIsEdit = () => setIsEdit(!isEdit);
   const apiUrl = process.env.REACT_APP_API_URL;
 
   const userName = JSON.parse(localStorage.getItem("userName"));
 
   const fetchTodos = useCallback(async () => {
     try {
-      const response = await fetch(`${apiUrl}/todos?userId=${user.id}`);
+      const response = await fetch(`${apiUrl}/api/todos?userId=${user.id}`);
       if (!response.ok) throw new Error("Failed to fetch Todos");
 
       const data = await response.json();
@@ -35,7 +35,7 @@ export default function List({ user, setUser }) {
     if (!name.trim()) return;
 
     try {
-      const response = await fetch(`${apiUrl}/todos`, {
+      const response = await fetch(`${apiUrl}/api/todos`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ name, userId: user.id }),
