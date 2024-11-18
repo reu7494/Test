@@ -8,6 +8,8 @@ export default function List({ user, setUser }) {
   const [name, setName] = useState("");
   const [lists, setLists] = useState([]);
   const [error, setError] = useState(null);
+  const [isEdit, setIsEdit] = useState(flase);
+  const toggleIsEdit = () => setIsEdit(!isEdit);
   const apiUrl = process.env.REACT_APP_API_URL;
 
   const userName = JSON.parse(localStorage.getItem("userName"));
