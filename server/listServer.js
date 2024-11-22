@@ -4,16 +4,16 @@ const cors = require("cors");
 const PORT = process.env.PORT || 8000;
 const path = require("path");
 const { prototype } = require("stream");
-require("dotenv").config();
+//require("dotenv").config();
 
 const app = express();
 const corsOptions = {
   origin: (origin, callback) => {
     const allowedOrigins = [
       "http://localhost:3000",
-      "http://localhost:8008",
-      "http://211.105.138.241:3000",
-      "http://211.105.138.241:8000",
+      "http://localhost:8000",
+      "http://210.104.18.212:3000",
+      "http://210.104.18.212:8000",
     ];
 
     if (!origin || allowedOrigins.includes(origin)) {
@@ -33,10 +33,10 @@ app.use(express.json());
 
 // MySQL 데이터베이스 설정
 const db = mysql.createConnection({
-  host: process.env.DB_HOST || "localhost",
+  host: process.env.DB_HOST,
   user: process.env.DB_USER || "root",
   password: process.env.DB_PASSWORD || "1234",
-  database: process.env.DB_NAME || "todolistdatabase",
+  database: process.env.DB_NAME,
 });
 
 // MySQL 연결
