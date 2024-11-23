@@ -1,11 +1,12 @@
 import React from "react";
 
 export default function Eliminate({ list, lists, setLists }) {
+  const apiUrl = process.env.REACT_APP_API_URL;
   return (
     <>
       <button
         onClick={() => {
-          fetch(`http://localhost:8008/todos/${list.id}`, {
+          fetch(`${apiUrl}/api/todos/${list.id}`, {
             method: "DELETE",
           }).then(() => {
             setLists(lists.filter((item) => item.id !== list.id));

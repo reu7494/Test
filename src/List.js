@@ -8,13 +8,13 @@ export default function List({ user, setUser }) {
   const [name, setName] = useState("");
   const [lists, setLists] = useState([]);
   const [error, setError] = useState(null);
-  //const [isEdit, setIsEdit] = useState(flase);
-  //const toggleIsEdit = () => setIsEdit(!isEdit);
   const apiUrl = process.env.REACT_APP_API_URL;
 
   const userName = JSON.parse(localStorage.getItem("userName"));
 
   const fetchTodos = useCallback(async () => {
+    if (!user || !user.id) return;
+
     try {
       const response = await fetch(`${apiUrl}/api/todos?userId=${user.id}`);
       if (!response.ok) throw new Error("Failed to fetch Todos");
@@ -25,14 +25,14 @@ export default function List({ user, setUser }) {
       console.error("Error fetching Todos:", error);
       setError("Failed to load tasks.");
     }
-  }, [apiUrl, user.id]);
+  }, [apiUrl, user]);
 
   useEffect(() => {
     if (user) fetchTodos();
   }, [user, fetchTodos]);
 
   const handleAdd = async () => {
-    if (!name.trim()) return;
+    if (!name.trim() || !user || !user.id) return;
 
     try {
       const response = await fetch(`${apiUrl}/api/todos`, {
