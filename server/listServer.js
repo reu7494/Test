@@ -11,7 +11,7 @@ const corsOptions = {
   origin: (origin, callback) => {
     const allowedOrigins = [
       "http://localhost:8000",
-      "http://121.183.22.182:8000",
+      "http://118.45.49.196:8000",
     ];
 
     if (!origin || allowedOrigins.includes(origin)) {
@@ -222,12 +222,7 @@ app.delete("/api/delete-user/:id", (req, res) => {
 });
 
 app.use((req, res, next) => {
-  const allowedOrigins = [
-    "http://localhost:3000",
-    "http://localhost:8008",
-    "http://211.105.138.241:3000",
-    "http://211.105.138.241:8000",
-  ];
+  const allowedOrigins = ["http://localhost:8008", "http://118.45.49.196:8000"];
   const origin = req.headers.origin;
 
   if (allowedOrigins.includes(origin)) {
