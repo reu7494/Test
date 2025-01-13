@@ -3,16 +3,14 @@ const mysql = require("mysql2");
 const cors = require("cors");
 const PORT = process.env.PORT || 8000;
 const path = require("path");
-const { prototype } = require("stream");
 require("dotenv").config();
 
 const app = express();
 const corsOptions = {
   origin: (origin, callback) => {
-    const allowedOrigins = [
-      "http://localhost:8000",
-      "http://118.45.49.196:8000",
-    ];
+    const allowedOrigins = process.env.ALLOWED_ORIGINS
+      ? process.env.ALLOWED_ORIGINS.split(",")
+      : [];
 
     if (!origin || allowedOrigins.includes(origin)) {
       callback(null, true);
@@ -47,7 +45,7 @@ db.connect((err) => {
 });
 
 // 유저명 중복 확인 API
-app.post("/api/check-username", (req, res) => {
+app.post("/check-username", (req, res) => {
   const { userName } = req.body;
 
   if (!userName) {
@@ -222,7 +220,9 @@ app.delete("/api/delete-user/:id", (req, res) => {
 });
 
 app.use((req, res, next) => {
-  const allowedOrigins = ["http://localhost:8008", "http://118.45.49.196:8000"];
+  const allowedOrigins = process.env.ALLOWED_ORIGINS
+    ? process.env.ALLOWED_ORIGINS.split(",")
+    : [];
   const origin = req.headers.origin;
 
   if (allowedOrigins.includes(origin)) {

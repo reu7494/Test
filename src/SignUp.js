@@ -30,11 +30,11 @@ export default function SignUp() {
     });
 
     if (!response.ok) {
-      throw new Error("Failed to check username");
+      throw new Error("Failed to check userName");
     }
 
     const data = await response.json();
-    return data.exists;
+    return data.exists; // 중복 여부 반환
   };
 
   const handleSignUp = async (e) => {
@@ -69,8 +69,7 @@ export default function SignUp() {
       setFormErrors(validationErrors);
       return;
     }
-
-    // 유저명 중복 체크
+    //유저명 중복 체크
     const isUserNameDuplicate = await checkUserNameDuplicate(userName);
     if (isUserNameDuplicate) {
       setError("이미 사용 중인 유저명입니다.");
@@ -112,7 +111,7 @@ export default function SignUp() {
 
   return (
     <div className="container">
-      <h2>회원가입</h2>
+      <h2>SignUp</h2>
       <form onSubmit={handleSignUp}>
         <div className="form-field">
           <label>유저명: </label>
