@@ -171,7 +171,8 @@ ul li button:hover {
 }
 
 .scroll {
-  max-height: 300px;
+  min-height: 300px;
+  max-height: 600px;
   overflow-y: auto;
 }
 

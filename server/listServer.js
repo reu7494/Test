@@ -7,17 +7,7 @@ require("dotenv").config();
 
 const app = express();
 const corsOptions = {
-  origin: (origin, callback) => {
-    const allowedOrigins = process.env.ALLOWED_ORIGINS
-      ? process.env.ALLOWED_ORIGINS.split(",")
-      : [];
-
-    if (!origin || allowedOrigins.includes(origin)) {
-      callback(null, true);
-    } else {
-      callback(new Error("CORS 정책에 의해 차단된 요청입니다."));
-    }
-  },
+  origin: ["http://localhost:8008", "http://210.223.245.98:8000"],
   methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
   allowedHeaders: ["Content-Type", "Authorization"],
   credentials: true,
@@ -45,7 +35,7 @@ db.connect((err) => {
 });
 
 // 유저명 중복 확인 API
-app.post("/check-username", (req, res) => {
+app.post("/api/check-username", (req, res) => {
   const { userName } = req.body;
 
   if (!userName) {
@@ -217,29 +207,6 @@ app.delete("/api/delete-user/:id", (req, res) => {
         .send("사용자 및 관련 작업관리가 성공적으로 삭제되었습니다.");
     });
   });
-});
-
-app.use((req, res, next) => {
-  const allowedOrigins = process.env.ALLOWED_ORIGINS
-    ? process.env.ALLOWED_ORIGINS.split(",")
-    : [];
-  const origin = req.headers.origin;
-
-  if (allowedOrigins.includes(origin)) {
-    res.setHeader("Access-Control-Allow-Origin", origin);
-  }
-
-  res.setHeader("Access-Control-Allow-Headers", "Content-Type, Authorization");
-  res.setHeader(
-    "Access-Control-Allow-Methods",
-    "GET, POST, PUT, DELETE, OPTIONS"
-  );
-  res.setHeader("Access-Control-Allow-Credentials", "true");
-  if (req.method === "OPTIONS") {
-    res.sendStatus(200);
-  } else {
-    next();
-  }
 });
 
 app.use(express.static(path.join(__dirname, "../build")));
